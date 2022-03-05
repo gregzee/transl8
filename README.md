@@ -20,7 +20,7 @@ Implementing OCR to translate images.
 
 1. Forwarding messages from group chats
 2. Forwarding from private chats
-3. using a /text command
+3. using a /text command to translate via copy/paste
 - /text <russian/ukranian text>
 
 
