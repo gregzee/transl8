@@ -4,7 +4,7 @@
 
 You can either go with an API Key or use an OAuth2 workflow. For Transl8, I used OAuth2, so this doc will be for OAUth 2.
 
-For API Key generation, which is a little more straight forward, follow this document below.
+For API Key generation, which is a little more straightforward, follow this document below.
 
 - [API Key doc](https://translatepress.com/docs/automatic-translation/generate-google-api-key/)
   - Anything related to Translatepress can be excluded.
@@ -25,7 +25,7 @@ For API Key generation, which is a little more straight forward, follow this doc
 1. Search for Cloud Translation API
 2. Enable Cloud Translation API
 3. You will need to put in billing information. Review this.
-  -  If its your first time using GCP, you should get a 300 dollars credit
+  -  If it's your first time using GCP, you should get a 300 dollars credit
   - 500k Characters translated are free. Each 1 million are $20 USD
   - Please review.
 
@@ -51,8 +51,8 @@ For API Key generation, which is a little more straight forward, follow this doc
 ![image](https://user-images.githubusercontent.com/38545800/156889249-89e9209c-07f5-4d68-8aaf-5592ba391232.png)
 
 3. Authorized Redirect URI
-- Where are you storing your credentials to authenticate & authroize the OAuth flow? In this write up I am using Tines.
-- For Tines you can find your callback uri in the OAuth2 when you are creating a OAuth2 credential. 
+- Where are you storing your credentials to authenticate & authorize the OAuth flow? In this write up I am using Tines.
+- For Tines you can find your callback uri in the OAuth2 when you are creating an OAuth2 credential. 
 
 ![image](https://user-images.githubusercontent.com/38545800/156889517-aabdcb02-505c-4d3c-98fb-d895336e8b26.png)
 
@@ -76,3 +76,6 @@ For API Key generation, which is a little more straight forward, follow this doc
 Done!
 
 Now  you can run a few tests!
+
+
+
