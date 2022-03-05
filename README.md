@@ -8,6 +8,8 @@ So far this has helped those that are looking to stay involved, but more importa
 
 While this was not the original intention, we were not aware during the thought of the bot. I would like for others who stumble upon this to send ideas how we could help those in-need in similar situations.
 
+We are always looking to imprve. Please send ideas our way.
+
 ## Possible next steps
 Looking at implementing OCR to translate images.
 
