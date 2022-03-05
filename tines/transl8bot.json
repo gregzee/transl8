@@ -1,0 +1,802 @@
+{
+  "schema_version": 4,
+  "name": "Translate Bot Ukraine",
+  "description": null,
+  "guid": "941b8aedf612143887c4bb7e95fb28fa",
+  "exported_at": "2022-03-05T16:45:02Z",
+  "agents": [
+    {
+      "type": "Agents::WebhookAgent",
+      "name": "Translate",
+      "disabled": false,
+      "guid": "2f7d803e2035ea4ff427500ddb874cc9",
+      "options": {
+        "path": "35c69d4a432f27d78e2ad33de52eef9",
+        "secret": "5ddd8c782308bc8e32316ac2429e1352",
+        "verbs": "get,post"
+      },
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::HTTPRequestAgent",
+      "name": "Set Webhook Telegram",
+      "disabled": false,
+      "guid": "6ef522d0f6bbd03757b4b410b6db9530",
+      "options": {
+        "url": "https://api.telegram.org/bot{{CREDENTIAL.telegram_bot}}/setWebhook",
+        "method": "post",
+        "content_type": "json",
+        "payload": {
+          "url": "set translate webhook action"
+        },
+        "disable_ssl_verification": false
+      },
+      "schedule": null,
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::HTTPRequestAgent",
+      "name": "detect language",
+      "disabled": false,
+      "guid": "bb9674ee59a244a2afb6d93a253fe21f",
+      "options": {
+        "url": "https://ws.detectlanguage.com/0.2/detect",
+        "method": "post",
+        "content_type": "form",
+        "payload": {
+          "q": "{{truncate_words.words | as_object}}"
+        },
+        "headers": {
+          "Authorization": "Bearer {{CREDENTIAL.detect_language}}"
+        }
+      },
+      "schedule": null,
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::EventTransformationAgent",
+      "name": "truncate words",
+      "disabled": false,
+      "guid": "cf8efc26036f5ddc668f1e18eea96c05",
+      "options": {
+        "mode": "message_only",
+        "loop": false,
+        "payload": {
+          "longtext": "{%if translate.body.message.text == null%}{{translate.body.message.caption}}{%else%}{{translate.body.message.text | remove: \"/text \"}}{%endif%}",
+          "words": "{%if translate.body.message.text == null%}{{translate.body.message.caption | truncatewords: 10}}{%else%}{{translate.body.message.text | truncatewords: 10}}{%endif%}"
+        }
+      },
+      "schedule": null,
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::TriggerAgent",
+      "name": "forward",
+      "disabled": false,
+      "guid": "c2315e0847a801e6e0cffe6bfeb710a7",
+      "options": {
+        "rules": [
+          {
+            "type": "field==value",
+            "value": "true",
+            "path": "{{build.forward}}"
+          },
+          {
+            "type": "field==value",
+            "value": "true",
+            "path": "{{build.forward_self_chat}}"
+          },
+          {
+            "type": "regex",
+            "value": "(\\/text)",
+            "path": "{{.translate.body.message.text}}"
+          }
+        ],
+        "must_match": 1
+      },
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::EventTransformationAgent",
+      "name": "build",
+      "disabled": false,
+      "guid": "da40fea12fc261676e504aee81ccf97a",
+      "options": {
+        "mode": "message_only",
+        "loop": false,
+        "payload": {
+          "forward": "{%if .translate.body.message.forward_from_message_id == null%}false{%else%}true{%endif%}",
+          "forward_self_chat": "{%if .translate.body.message.forward_from.id == null%}false{%else%}true{%endif%}",
+          "start": "{%if .translate.body.message.text == \"/start\"%}true{%else%}false{%endif%}",
+          "username": "{%if .translate.body.message.from.username == null%}Anonymous{%else%}{{.translate.body.message.from.username}}{%endif%}"
+        }
+      },
+      "schedule": null,
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::TriggerAgent",
+      "name": "start -- welcome",
+      "disabled": false,
+      "guid": "fa641b029e65ec0c0d12397b71286ab0",
+      "options": {
+        "rules": [
+          {
+            "type": "field==value",
+            "value": "true",
+            "path": "{{build.start}}"
+          }
+        ]
+      },
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::HTTPRequestAgent",
+      "name": "welcome message",
+      "disabled": false,
+      "guid": "99436e98e342eed5516c4c23682c6916",
+      "options": {
+        "url": "https://api.telegram.org/bot{{CREDENTIAL.telegram_bot_prod}}/sendMessage",
+        "method": "get",
+        "payload": {
+          "chat_id": "{{translate.body.message.chat.id}}",
+          "text": "Hi {%if .build.username == \"Anonymous\"%}Anonymous User{%else%}@{{.build.username}}{%endif%},\n\nThis bot was built for the people around the world closely watching the events unfold in Ukraine. On Telegram there are many groups that post in Ukrainian or Russian. This bot tries to help bridge that gap. \n\nDue to the nature of world events, this bot only accepts Russian or Ukrainian language, and will only translate to English.\n\nHOW TO USE:\n\nForward all Ukrainian/Russian messages to me and I will translate it for you. That's it!\n\nThank you!\n@trnsl8_bot"
+        }
+      },
+      "schedule": null,
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::EventTransformationAgent",
+      "name": "Deduplicate Events on Muliple Parameters",
+      "disabled": false,
+      "guid": "60975c1bc5078e168f2e7fcd16dc4a57",
+      "options": {
+        "mode": "deduplicate",
+        "lookback": "100",
+        "path": "{{.translate.body.message.chat.id.}}{{build.start.}}"
+      },
+      "schedule": null,
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::TriggerAgent",
+      "name": "Lang Confirm",
+      "disabled": false,
+      "guid": "15531b3a5bea235f499f945fd1649a20",
+      "options": {
+        "rules": [
+          {
+            "type": "field==value",
+            "value": "uk",
+            "path": "{{.parse.language.first.language}}"
+          },
+          {
+            "type": "field==value",
+            "value": "ru",
+            "path": "{{.parse.language.first.language}}"
+          },
+          {
+            "type": "field==value",
+            "value": "true",
+            "path": "{{.parse.language.first.isReliable}}"
+          },
+          {
+            "type": "field==value",
+            "value": "sr",
+            "path": "{{.parse.language.first.language}}"
+          }
+        ],
+        "must_match": 2,
+        "emit_no_match": false
+      },
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::EventTransformationAgent",
+      "name": "parse",
+      "disabled": false,
+      "guid": "2350ff6fb515de4fc7121070ad7905dd",
+      "options": {
+        "mode": "message_only",
+        "loop": false,
+        "payload": {
+          "language": "{{detect_language.body.data.detections.first | where: \"isReliable\", true | as_object}}"
+        }
+      },
+      "schedule": null,
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::TriggerAgent",
+      "name": "Lang Not Confirm",
+      "disabled": false,
+      "guid": "4d57602f0000729d6ba863f2ee679f58",
+      "options": {
+        "rules": [
+          {
+            "type": "field!=value",
+            "value": "uk",
+            "path": "{{.parse.language.first.language}}"
+          },
+          {
+            "type": "field!=value",
+            "value": "ru",
+            "path": "{{.parse.language.first.language}}"
+          },
+          {
+            "type": "field==value",
+            "value": "true",
+            "path": "{{.parse.language.first.isReliable}}"
+          },
+          {
+            "type": "field!=value",
+            "value": "sr",
+            "path": "{{.parse.language.first.language}}"
+          }
+        ],
+        "must_match": 4,
+        "emit_no_match": false
+      },
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::HTTPRequestAgent",
+      "name": "Not Supported msg",
+      "disabled": false,
+      "guid": "8ad93b958962009897932b096d2ef0d5",
+      "options": {
+        "url": "https://api.telegram.org/bot{{CREDENTIAL.telegram_bot_prod}}/sendMessage",
+        "method": "get",
+        "payload": {
+          "chat_id": "{{translate.body.message.chat.id}}",
+          "reply_to_message_id": "{{translate.body.message.message_id}}",
+          "text": "You are trying to translate, {{lang.resourcelang.first.Afar}} to English. This is not supported right now. \n\nThank you!\n@trnsl8_bot"
+        }
+      },
+      "schedule": null,
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::EventTransformationAgent",
+      "name": "Lang",
+      "disabled": false,
+      "guid": "7e63507c3beb205147651ccc220ec7bd",
+      "options": {
+        "mode": "message_only",
+        "loop": false,
+        "payload": {
+          "resourcelang": "{{RESOURCE.lang | where: \"lang\", parse.language.first.language | as_object}}"
+        }
+      },
+      "schedule": null,
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::HTTPRequestAgent",
+      "name": "Translate Telegram Msg",
+      "disabled": false,
+      "guid": "38de76ce231834712bfac2245e90798d",
+      "options": {
+        "url": "https://api.telegram.org/bot{{CREDENTIAL.telegram_bot_prod}}/sendMessage",
+        "method": "get",
+        "payload": {
+          "chat_id": "{{translate.body.message.chat.id}}",
+          "reply_to_message_id": "{{translate.body.message.message_id}}",
+          "text": "{{google_translate.body.data.translations.first.translatedText | as_object}}"
+        }
+      },
+      "schedule": null,
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::EventTransformationAgent",
+      "name": "Block same translation from same user",
+      "disabled": false,
+      "guid": "731c8bc8c0f1d55dc26562b4c26dbf5a",
+      "options": {
+        "mode": "deduplicate",
+        "lookback": "100000",
+        "path": "{{.translate.body.message.chat.id}}{{truncate_words.words}}",
+        "emit_duplicates": true
+      },
+      "schedule": null,
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::EventTransformationAgent",
+      "name": "Dedup",
+      "disabled": false,
+      "guid": "e9e727ab0fd30f91ad0f1eebbc29ff4e",
+      "options": {
+        "mode": "deduplicate",
+        "lookback": "25",
+        "path": "{{.translate_telegram_msg.body.result.chat.id}}",
+        "emit_duplicates": false
+      },
+      "schedule": null,
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::HTTPRequestAgent",
+      "name": "Support",
+      "disabled": false,
+      "guid": "14c0e226225d1075721b27d1ad74483b",
+      "options": {
+        "url": "https://api.telegram.org/bot{{CREDENTIAL.telegram_bot_prod}}/sendMessage",
+        "method": "get",
+        "payload": {
+          "chat_id": "{{.translate_telegram_msg.body.result.chat.id}}",
+          "text": "To keep services up and running donations are welcomed. Any excess money will be donated to the best humanitarian fund. We are still researching, to ensure that the fund is ethical and will put the money to proper use.\n\nBTC: 1B677ty2c1L2sFAjEzPWvikk6WVx4CBUj1\n\nETH: 0x0cf107299BA3EAa518F9FaC0DA74AA36f0e1269E\n\nUSDT: 0x0cf107299BA3EAa518F9FaC0DA74AA36f0e1269E\n\nComments, question, ideas, bugs. We want to hear.\n{{RESOURCE.protonemai.email}}\n\nThank you,\n@trnsl8_bot"
+        }
+      },
+      "schedule": null,
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::EmailAgent",
+      "name": "Email Action",
+      "disabled": false,
+      "guid": "110a57c4faf50f8411638edcf0b18454",
+      "options": {
+        "recipients": [
+          "{{RESOURCE.protonemai.email}}"
+        ],
+        "subject": "Dedup | Before Detect Language",
+        "body": "<b>Username:</b> {{build.username}}<br /><br />\n<b>Block:</b> {{truncate_words.longtext}}\n<br /> <br />\n<b>BlockSize:</b>{{truncate_words.longtext | size}}"
+      },
+      "schedule": null,
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::TriggerAgent",
+      "name": "Unique",
+      "disabled": false,
+      "guid": "f7bbdc772b9a46dc4ade79791a976c80",
+      "options": {
+        "rules": [
+          {
+            "type": "field==value",
+            "value": "true",
+            "path": "{{.block_same_translation_from_same_user.unique_event}}"
+          }
+        ]
+      },
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::TriggerAgent",
+      "name": "duplicate",
+      "disabled": false,
+      "guid": "73dba455c6878c43099ba9194b14fc24",
+      "options": {
+        "rules": [
+          {
+            "type": "field==value",
+            "value": "false",
+            "path": "{{.block_same_translation_from_same_user.unique_event}}"
+          }
+        ]
+      },
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::TriggerAgent",
+      "name": "Error",
+      "disabled": false,
+      "guid": "6bd5802e2f35e162bc9e63893c55e1c4",
+      "options": {
+        "rules": [
+          {
+            "type": "field==value",
+            "value": "403",
+            "path": "{{.google_translate.body.error.code}}"
+          }
+        ],
+        "must_match": 1,
+        "emit_no_match": false
+      },
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::HTTPRequestAgent",
+      "name": "Error message (Send User Message)",
+      "disabled": false,
+      "guid": "480c7bab71fbf805466d4282840b513f",
+      "options": {
+        "url": "https://api.telegram.org/bot{{CREDENTIAL.telegram_bot_prod}}/sendMessage",
+        "method": "get",
+        "payload": {
+          "chat_id": "{{translate.body.message.chat.id}}",
+          "text": "Oh no! The reddit hug of death. Give me a second to breath, and I will be right back.\n\nWe are working on a solution to free up the pipes.\n\nThank you,\n@trnsl8_bot"
+        }
+      },
+      "schedule": null,
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::TriggerAgent",
+      "name": "Not Error",
+      "disabled": false,
+      "guid": "520a328edfa7c2c43a1bb8c44043082c",
+      "options": {
+        "rules": [
+          {
+            "type": "field!=value",
+            "value": "403",
+            "path": "{{.google_translate.body.error.code}}"
+          }
+        ],
+        "must_match": 1,
+        "emit_no_match": false
+      },
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::EmailAgent",
+      "name": "Email Action (Send Admin Email)",
+      "disabled": false,
+      "guid": "665f620074a2b294a9c9cc9c160141d5",
+      "options": {
+        "recipients": [
+          "{{RESOURCE.protonemai.email}}"
+        ],
+        "subject": "Google Translation API needs to Breath!!!",
+        "body": "broken"
+      },
+      "schedule": null,
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::HTTPRequestAgent",
+      "name": "Google Translate",
+      "disabled": false,
+      "guid": "43397915fd5b8621dab819a53883fd05",
+      "options": {
+        "url": "https://www.googleapis.com/language/translate/v2",
+        "content_type": "json",
+        "method": "post",
+        "payload": {
+          "target": "eng",
+          "q": "{{truncate_words.longtext | as_object}}",
+          "format": "text"
+        },
+        "headers": {
+          "Authorization": "Bearer {{CREDENTIAL.oauth2_translate}}"
+        }
+      },
+      "schedule": null,
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::HTTPRequestAgent",
+      "name": "Error message",
+      "disabled": false,
+      "guid": "85fe06ca92d0db84fc1bc1ea49c2b433",
+      "options": {
+        "url": "https://api.telegram.org/bot{{CREDENTIAL.telegram_bot_prod}}/sendMessage",
+        "method": "get",
+        "payload": {
+          "chat_id": "{{translate.body.message.chat.id}}",
+          "text": "Oh no! services are not operating. The team has been alerted. \n\nReach out to {{RESOURCE.protonemai.email}} for questions/updates.\n\nWe are working on a solution to free up the pipes. We hope you and your family are safe.\n\nThank you,\n@trnsl8_bot"
+        }
+      },
+      "schedule": null,
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::TriggerAgent",
+      "name": "Ban",
+      "disabled": false,
+      "guid": "610b10a7b969b458e754b8c7550577eb",
+      "options": {
+        "rules": [
+          {
+            "type": "not in",
+            "value": "5190002904",
+            "path": "{{.translate.body.message.chat.id}}"
+          }
+        ],
+        "emit_no_match": true
+      },
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::TriggerAgent",
+      "name": "False",
+      "disabled": false,
+      "guid": "517312590c5b79854df5d79c61ba5fb2",
+      "options": {
+        "rules": [
+          {
+            "type": "field==value",
+            "value": "false",
+            "path": "{{.ban.rule_matched}}"
+          }
+        ]
+      },
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::TriggerAgent",
+      "name": "True",
+      "disabled": false,
+      "guid": "4230f31de995a9db92e747b14cbcc99b",
+      "options": {
+        "rules": [
+          {
+            "type": "field==value",
+            "value": "true",
+            "path": "{{.ban.rule_matched}}"
+          }
+        ]
+      },
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::EventTransformationAgent",
+      "name": "Deduplicate",
+      "disabled": false,
+      "guid": "7e5789cce1074d64f7539f40f51e866e",
+      "options": {
+        "mode": "deduplicate",
+        "lookback": "10",
+        "path": "{{.translate.body.message.chat.id.}}"
+      },
+      "schedule": null,
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::HTTPRequestAgent",
+      "name": "Error message (Send Admin Message)",
+      "disabled": false,
+      "guid": "79a624092bc7d23e29467afeab6584e5",
+      "options": {
+        "url": "https://api.telegram.org/bot{{CREDENTIAL.telegram_bot_prod}}/sendMessage",
+        "method": "get",
+        "payload": {
+          "chat_id": "{{RESOURCE.ttelegram_admin}}",
+          "text": "The bot is down, fix GCP\n\nThank you,\n@trnsl8_bot"
+        }
+      },
+      "schedule": null,
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::HTTPRequestAgent",
+      "name": "new features update",
+      "disabled": false,
+      "guid": "eb81ee9be1ba0a7985d664f0144444fe",
+      "options": {
+        "url": "https://api.telegram.org/bot{{CREDENTIAL.telegram_bot_prod}}/sendMessage",
+        "method": "get",
+        "payload": {
+          "chat_id": "{{translate.body.message.chat.id}}",
+          "text": "Hi {%if .build.username == \"Anonymous\"%}Anonymous User{%else%}@{{.build.username}}{%endif%},\n\nNEW FEATURES: \n1. You can now send the bot directly Ukrainian or Russian text. How do you activate it?\n\n/text <input/copy Russian or Ukrainian text>\n\n2. You can forward text from private chats! \n\nThank you!\n@trnsl8_bot"
+        }
+      },
+      "schedule": null,
+      "keep_events_for": 0
+    },
+    {
+      "type": "Agents::EventTransformationAgent",
+      "name": "Dedup infinite",
+      "disabled": false,
+      "guid": "84cd9fc9097eb627c55a80a92b00428d",
+      "options": {
+        "mode": "deduplicate",
+        "lookback": "10000000",
+        "path": "{{.translate.body.message.chat.id}}",
+        "emit_duplicates": false
+      },
+      "schedule": null,
+      "keep_events_for": 0
+    }
+  ],
+  "diagram_notes": [
+    {
+      "content": "I wish I didn't have to create this, but there was a user blowing up the instance and the API's. This is to shadow ban users when you notice they are using your bot unethically or, using a bot to restrict your resources/run up your bill\n\n1.  False trigger is looking for the BAN trigger match\n2. We only dedup the last 10 events\n3. Send a message\n4. Goal - send a message out every 10 attempts.",
+      "position": [
+        -240.0,
+        -690.0
+      ],
+      "guid": "baf74249286dc73ed66ba5715146d7fb"
+    },
+    {
+      "content": "Speak to @bothfather and create your bot.\n\nYou can set from your terminal, or set it from this http request action. ",
+      "position": [
+        345.0,
+        -555.0
+      ],
+      "guid": "38c52ef9888910261cd4a9be2eed0608"
+    },
+    {
+      "content": "When you join the bot you automatically send /start.\n\nThis is the welcome message",
+      "position": [
+        855.0,
+        15.0
+      ],
+      "guid": "dd0c09aebf9b8ad65da591a637280e9b"
+    },
+    {
+      "content": "Deduping same text from same users.  We want to avoid abuse",
+      "position": [
+        -360.0,
+        255.0
+      ],
+      "guid": "76a282d052a3218f87f752b1d947e7d7"
+    },
+    {
+      "content": "Using the detection engine api to let the end users know that Ukrainian and Russian is only accepted at this time.\n\nThe trigger actions allow us to do this.",
+      "position": [
+        435.0,
+        420.0
+      ],
+      "guid": "880b686ec695f34a6cca70ded1b4f575"
+    },
+    {
+      "content": "If Russian or Ukranian, it will be sent to the Google Translate API and then sent onto the enduser",
+      "position": [
+        -330.0,
+        390.0
+      ],
+      "guid": "5299ceb7de59d338a7edb6ba1d0d1550"
+    },
+    {
+      "content": "If Google Translate 400's\n\n1. User gets notified\n2. Admins get notified Telegram & Email",
+      "position": [
+        -585.0,
+        720.0
+      ],
+      "guid": "367d9b5fdcb09081238f9142652cdba5"
+    },
+    {
+      "content": "Sends 1 message to users letting them know about new features.",
+      "position": [
+        -225.0,
+        -60.0
+      ],
+      "guid": "3add512118adbb07465830c5faa033cd"
+    }
+  ],
+  "links": [
+    {
+      "source": 0,
+      "receiver": 27
+    },
+    {
+      "source": 2,
+      "receiver": 10
+    },
+    {
+      "source": 3,
+      "receiver": 15
+    },
+    {
+      "source": 4,
+      "receiver": 3
+    },
+    {
+      "source": 4,
+      "receiver": 33
+    },
+    {
+      "source": 5,
+      "receiver": 6
+    },
+    {
+      "source": 5,
+      "receiver": 4
+    },
+    {
+      "source": 6,
+      "receiver": 8
+    },
+    {
+      "source": 8,
+      "receiver": 7
+    },
+    {
+      "source": 9,
+      "receiver": 25
+    },
+    {
+      "source": 10,
+      "receiver": 11
+    },
+    {
+      "source": 10,
+      "receiver": 9
+    },
+    {
+      "source": 11,
+      "receiver": 13
+    },
+    {
+      "source": 13,
+      "receiver": 12
+    },
+    {
+      "source": 14,
+      "receiver": 16
+    },
+    {
+      "source": 15,
+      "receiver": 19
+    },
+    {
+      "source": 15,
+      "receiver": 20
+    },
+    {
+      "source": 19,
+      "receiver": 2
+    },
+    {
+      "source": 20,
+      "receiver": 18
+    },
+    {
+      "source": 21,
+      "receiver": 22
+    },
+    {
+      "source": 21,
+      "receiver": 31
+    },
+    {
+      "source": 22,
+      "receiver": 24
+    },
+    {
+      "source": 23,
+      "receiver": 14
+    },
+    {
+      "source": 25,
+      "receiver": 21
+    },
+    {
+      "source": 25,
+      "receiver": 23
+    },
+    {
+      "source": 27,
+      "receiver": 28
+    },
+    {
+      "source": 27,
+      "receiver": 29
+    },
+    {
+      "source": 28,
+      "receiver": 30
+    },
+    {
+      "source": 29,
+      "receiver": 5
+    },
+    {
+      "source": 30,
+      "receiver": 26
+    },
+    {
+      "source": 33,
+      "receiver": 32
+    }
+  ],
+  "diagram_layout": "{\"2f7d803e2035ea4ff427500ddb874cc9\":[360.0,-345.0],\"6ef522d0f6bbd03757b4b410b6db9530\":[630.0,-525.0],\"bb9674ee59a244a2afb6d93a253fe21f\":[150.0,270.0],\"cf8efc26036f5ddc668f1e18eea96c05\":[150.0,45.0],\"c2315e0847a801e6e0cffe6bfeb710a7\":[150.0,-45.0],\"da40fea12fc261676e504aee81ccf97a\":[360.0,-105.0],\"fa641b029e65ec0c0d12397b71286ab0\":[615.0,-30.0],\"99436e98e342eed5516c4c23682c6916\":[615.0,105.0],\"60975c1bc5078e168f2e7fcd16dc4a57\":[615.0,30.0],\"15531b3a5bea235f499f945fd1649a20\":[-15.0,405.0],\"2350ff6fb515de4fc7121070ad7905dd\":[150.0,330.0],\"4d57602f0000729d6ba863f2ee679f58\":[225.0,405.0],\"8ad93b958962009897932b096d2ef0d5\":[225.0,525.0],\"7e63507c3beb205147651ccc220ec7bd\":[225.0,465.0],\"38de76ce231834712bfac2245e90798d\":[-15.0,645.0],\"731c8bc8c0f1d55dc26562b4c26dbf5a\":[150.0,120.0],\"e9e727ab0fd30f91ad0f1eebbc29ff4e\":[-15.0,705.0],\"14c0e226225d1075721b27d1ad74483b\":[-15.0,765.0],\"110a57c4faf50f8411638edcf0b18454\":[-45.0,285.0],\"f7bbdc772b9a46dc4ade79791a976c80\":[150.0,210.0],\"73dba455c6878c43099ba9194b14fc24\":[-45.0,225.0],\"6bd5802e2f35e162bc9e63893c55e1c4\":[-210.0,555.0],\"480c7bab71fbf805466d4282840b513f\":[-300.0,630.0],\"520a328edfa7c2c43a1bb8c44043082c\":[-15.0,570.0],\"665f620074a2b294a9c9cc9c160141d5\":[-300.0,705.0],\"43397915fd5b8621dab819a53883fd05\":[-15.0,480.0],\"85fe06ca92d0db84fc1bc1ea49c2b433\":[90.0,-525.0],\"610b10a7b969b458e754b8c7550577eb\":[360.0,-270.0],\"517312590c5b79854df5d79c61ba5fb2\":[90.0,-645.0],\"4230f31de995a9db92e747b14cbcc99b\":[360.0,-195.0],\"7e5789cce1074d64f7539f40f51e866e\":[90.0,-585.0],\"79a624092bc7d23e29467afeab6584e5\":[-555.0,630.0],\"eb81ee9be1ba0a7985d664f0144444fe\":[-150.0,90.0],\"84cd9fc9097eb627c55a80a92b00428d\":[-150.0,15.0]}",
+  "send_to_story_enabled": false,
+  "entry_agent_guid": null,
+  "exit_agent_guids": [],
+  "exit_agent_guid": null,
+  "send_to_stories": [],
+  "form": {
+    "name": "Translate Bot Ukraine Form",
+    "description": "",
+    "fields": [],
+    "visibility": "tenant",
+    "agent_guid": null,
+    "success_message": "Thank you for your submission"
+  }
+}
