@@ -12,7 +12,7 @@ While this was not the original intention, we were not aware during the thought 
 Looking at implementing OCR to translate images.
 
 
-## The bot works by
+## How to Transl8
 
 1. Forwarding messages from group chats
 2. Forwarding from private chats
