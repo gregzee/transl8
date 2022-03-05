@@ -20,7 +20,7 @@ Looking at implementing OCR to translate images.
 - /text <russian/ukranian text>
 
 
-## How we thnk you should set up your bot! Order of operations
+## Order of set up
 
 Of course you don't have to follow 1-4, but this is how we went about it. Feel free to reach out.
 
