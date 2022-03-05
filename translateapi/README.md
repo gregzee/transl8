@@ -2,8 +2,9 @@
 
 ## Getting Started
 
-You can either go with an API Key or use an OAuth2 workflow. For Transl8, I used OAuth2. If you want to 
-with an API Key, you can follow this guide, it's relatively similar."
+You can either go with an API Key or use an OAuth2 workflow. For Transl8, I used OAuth2, so this doc will be for OAUth 2.
+
+For API Key generation, which is a little more straight forward, follow this document below.
 
 - [API Key doc](https://translatepress.com/docs/automatic-translation/generate-google-api-key/)
   - Anything related to Translatepress can be excluded.
