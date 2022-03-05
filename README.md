@@ -11,7 +11,7 @@ While this was not the original intention, we were not aware during the thought 
 We are always looking to imprve. Please send ideas our way.
 
 ## Possible next steps
-Looking at implementing OCR to translate images.
+Implementing OCR to translate images.
 
 
 ## How to Transl8
