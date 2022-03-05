@@ -14,7 +14,7 @@ You must always reach out to the Botfather on telegram.
 
 ![image](https://user-images.githubusercontent.com/38545800/156890408-bea8f6c4-d0bd-4f7e-8d94-21bbd62f74db.png)
 
-3. Select new bot and go through the botfathers workflow.
+3. Select a new bot and go through the botfathers workflow.
 4. Take note of the token the bot gave you <###>:<###>
 5. Set your webhook to your Telegram bot
 - If you are usine tines.io, your webhook action will provide you all the details.
@@ -52,3 +52,6 @@ curl https://api.telegram.org/bot<token>/setWebhook \
 ## Next Steps
 
 If you have completed Google Translate API, The detectionlanguage API and now this, we can move forward and use Tines to glue everything together.
+
+
+
