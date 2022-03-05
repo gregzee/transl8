@@ -52,7 +52,9 @@ with an API Key, you can follow this guide, it's relatively similar."
 3. Authorized Redirect URI
 - Where are you storing your credentials to authenticate & authroize the OAuth flow? In this write up I am using Tines.
 - For Tines you can find your callback uri in the OAuth2 when you are creating a OAuth2 credential. 
-- ![image](https://user-images.githubusercontent.com/38545800/156889517-aabdcb02-505c-4d3c-98fb-d895336e8b26.png)
+
+![image](https://user-images.githubusercontent.com/38545800/156889517-aabdcb02-505c-4d3c-98fb-d895336e8b26.png)
+
 - You'd take the callback uri, and post it in the Authorized Redirect URI.
 
 4. Save, Copy Credentials to your credential store.
