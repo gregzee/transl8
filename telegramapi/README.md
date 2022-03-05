@@ -22,6 +22,9 @@ You must always reach out to the Botfather on telegram.
 **From Tines**
 
 ![image](https://user-images.githubusercontent.com/38545800/156890918-a503c93d-bc43-41ec-8601-b3359e7d3bbf.png)
+![image](https://user-images.githubusercontent.com/38545800/156891691-8cf426ec-8049-46a2-bc91-3d12f8c2216b.png)
+![image](https://user-images.githubusercontent.com/38545800/156891716-32997949-54b5-479e-a5f0-d86aafe7f483.png)
+
 
 *Curl Example:*
 ```
