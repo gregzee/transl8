@@ -10,6 +10,8 @@ While this was not the original intention, we were not aware during the thought 
 
 We are always looking to imprve. Please send ideas our way.
 
+Bot: https://t.me/trnsl8_bot
+
 ## Possible next steps
 Implementing OCR to translate images.
 
