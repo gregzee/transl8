@@ -61,6 +61,7 @@ with an API Key, you can follow this guide, it's relatively similar."
 ## Hooking this into tines.io
 
 1. Create new credential under "Your Team" (Or rename it)
+
 ![image](https://user-images.githubusercontent.com/38545800/156889721-26df1c86-b213-4c39-94a0-aa8e4256b0c5.png)
 
 2. Fill everything out from google. Example below.
