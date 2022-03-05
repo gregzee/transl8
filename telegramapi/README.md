@@ -34,4 +34,4 @@ curl https://api.telegram.org/bot<token>/setWebhook \
 
 ## Next Steps
 
-Now that the bot has a webhook, you can start glueing everything together. 
+If you have completed Google Translate API, The detectionlanguage API and now this, we can move forward and use Tines to glue everything together.
