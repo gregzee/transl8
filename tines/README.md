@@ -9,3 +9,6 @@ You can check out the workflow build in tines here
 export the story in json, and import it into your tenant. It may make more sense how it works. 
 
 Here is a swimlane of the workflow.
+![image](https://user-images.githubusercontent.com/38545800/156892277-a2ec744c-ad01-493c-8e5f-eba7eba9da55.png)
+
+
