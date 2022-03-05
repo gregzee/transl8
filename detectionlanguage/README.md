@@ -11,6 +11,18 @@ We are using https://detectlanguage.com/ for Transl8, and after various tests it
 3. Documentation on the website is really straight forward when trying to detect a language
 4. https://detectlanguage.com/documentation#single-detection
 
+## For Tines
+
+1. Copy API Key
+2. Go to Credentials & Create New
+3. Use "TEXT" credential
+4. Store & Save
+
+*Example:*
+
+![image](https://user-images.githubusercontent.com/38545800/156892893-21a4465a-5c1a-4695-9fed-3e7e89c8e64d.png)
+
+
 
 ## How is it used?
 
