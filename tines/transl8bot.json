@@ -3,7 +3,7 @@
   "name": "Translate Bot Ukraine",
   "description": null,
   "guid": "941b8aedf612143887c4bb7e95fb28fa",
-  "exported_at": "2022-03-05T16:45:02Z",
+  "exported_at": "2022-03-06T03:06:52Z",
   "agents": [
     {
       "type": "Agents::WebhookAgent",
@@ -12,7 +12,7 @@
       "guid": "2f7d803e2035ea4ff427500ddb874cc9",
       "options": {
         "path": "35c69d4a432f27d78e2ad33de52eef9",
-        "secret": "5ddd8c782308bc8e32316ac2429e1352",
+        "secret": "d84b8ffa7f6274452c3628e76160c5ee9",
         "verbs": "get,post"
       },
       "keep_events_for": 0
@@ -299,36 +299,6 @@
         "lookback": "100000",
         "path": "{{.translate.body.message.chat.id}}{{truncate_words.words}}",
         "emit_duplicates": true
-      },
-      "schedule": null,
-      "keep_events_for": 0
-    },
-    {
-      "type": "Agents::EventTransformationAgent",
-      "name": "Dedup",
-      "disabled": false,
-      "guid": "e9e727ab0fd30f91ad0f1eebbc29ff4e",
-      "options": {
-        "mode": "deduplicate",
-        "lookback": "25",
-        "path": "{{.translate_telegram_msg.body.result.chat.id}}",
-        "emit_duplicates": false
-      },
-      "schedule": null,
-      "keep_events_for": 0
-    },
-    {
-      "type": "Agents::HTTPRequestAgent",
-      "name": "Support",
-      "disabled": false,
-      "guid": "14c0e226225d1075721b27d1ad74483b",
-      "options": {
-        "url": "https://api.telegram.org/bot{{CREDENTIAL.telegram_bot_prod}}/sendMessage",
-        "method": "get",
-        "payload": {
-          "chat_id": "{{.translate_telegram_msg.body.result.chat.id}}",
-          "text": "To keep services up and running donations are welcomed. Any excess money will be donated to the best humanitarian fund. We are still researching, to ensure that the fund is ethical and will put the money to proper use.\n\nBTC: 1B677ty2c1L2sFAjEzPWvikk6WVx4CBUj1\n\nETH: 0x0cf107299BA3EAa518F9FaC0DA74AA36f0e1269E\n\nUSDT: 0x0cf107299BA3EAa518F9FaC0DA74AA36f0e1269E\n\nComments, question, ideas, bugs. We want to hear.\n{{RESOURCE.protonemai.email}}\n\nThank you,\n@trnsl8_bot"
-        }
       },
       "schedule": null,
       "keep_events_for": 0
@@ -662,7 +632,7 @@
   "links": [
     {
       "source": 0,
-      "receiver": 27
+      "receiver": 25
     },
     {
       "source": 2,
@@ -678,7 +648,7 @@
     },
     {
       "source": 4,
-      "receiver": 33
+      "receiver": 31
     },
     {
       "source": 5,
@@ -698,7 +668,7 @@
     },
     {
       "source": 9,
-      "receiver": 25
+      "receiver": 23
     },
     {
       "source": 10,
@@ -717,75 +687,71 @@
       "receiver": 12
     },
     {
-      "source": 14,
+      "source": 15,
+      "receiver": 17
+    },
+    {
+      "source": 15,
+      "receiver": 18
+    },
+    {
+      "source": 17,
+      "receiver": 2
+    },
+    {
+      "source": 18,
       "receiver": 16
     },
     {
-      "source": 15,
-      "receiver": 19
-    },
-    {
-      "source": 15,
+      "source": 19,
       "receiver": 20
     },
     {
       "source": 19,
-      "receiver": 2
+      "receiver": 29
     },
     {
       "source": 20,
-      "receiver": 18
-    },
-    {
-      "source": 21,
       "receiver": 22
     },
     {
       "source": 21,
-      "receiver": 31
-    },
-    {
-      "source": 22,
-      "receiver": 24
-    },
-    {
-      "source": 23,
       "receiver": 14
     },
     {
-      "source": 25,
+      "source": 23,
+      "receiver": 19
+    },
+    {
+      "source": 23,
       "receiver": 21
     },
     {
       "source": 25,
-      "receiver": 23
+      "receiver": 26
     },
     {
-      "source": 27,
+      "source": 25,
+      "receiver": 27
+    },
+    {
+      "source": 26,
       "receiver": 28
     },
     {
       "source": 27,
-      "receiver": 29
-    },
-    {
-      "source": 28,
-      "receiver": 30
-    },
-    {
-      "source": 29,
       "receiver": 5
     },
     {
-      "source": 30,
-      "receiver": 26
+      "source": 28,
+      "receiver": 24
     },
     {
-      "source": 33,
-      "receiver": 32
+      "source": 31,
+      "receiver": 30
     }
   ],
-  "diagram_layout": "{\"2f7d803e2035ea4ff427500ddb874cc9\":[360.0,-345.0],\"6ef522d0f6bbd03757b4b410b6db9530\":[630.0,-525.0],\"bb9674ee59a244a2afb6d93a253fe21f\":[150.0,270.0],\"cf8efc26036f5ddc668f1e18eea96c05\":[150.0,45.0],\"c2315e0847a801e6e0cffe6bfeb710a7\":[150.0,-45.0],\"da40fea12fc261676e504aee81ccf97a\":[360.0,-105.0],\"fa641b029e65ec0c0d12397b71286ab0\":[615.0,-30.0],\"99436e98e342eed5516c4c23682c6916\":[615.0,105.0],\"60975c1bc5078e168f2e7fcd16dc4a57\":[615.0,30.0],\"15531b3a5bea235f499f945fd1649a20\":[-15.0,405.0],\"2350ff6fb515de4fc7121070ad7905dd\":[150.0,330.0],\"4d57602f0000729d6ba863f2ee679f58\":[225.0,405.0],\"8ad93b958962009897932b096d2ef0d5\":[225.0,525.0],\"7e63507c3beb205147651ccc220ec7bd\":[225.0,465.0],\"38de76ce231834712bfac2245e90798d\":[-15.0,645.0],\"731c8bc8c0f1d55dc26562b4c26dbf5a\":[150.0,120.0],\"e9e727ab0fd30f91ad0f1eebbc29ff4e\":[-15.0,705.0],\"14c0e226225d1075721b27d1ad74483b\":[-15.0,765.0],\"110a57c4faf50f8411638edcf0b18454\":[-45.0,285.0],\"f7bbdc772b9a46dc4ade79791a976c80\":[150.0,210.0],\"73dba455c6878c43099ba9194b14fc24\":[-45.0,225.0],\"6bd5802e2f35e162bc9e63893c55e1c4\":[-210.0,555.0],\"480c7bab71fbf805466d4282840b513f\":[-300.0,630.0],\"520a328edfa7c2c43a1bb8c44043082c\":[-15.0,570.0],\"665f620074a2b294a9c9cc9c160141d5\":[-300.0,705.0],\"43397915fd5b8621dab819a53883fd05\":[-15.0,480.0],\"85fe06ca92d0db84fc1bc1ea49c2b433\":[90.0,-525.0],\"610b10a7b969b458e754b8c7550577eb\":[360.0,-270.0],\"517312590c5b79854df5d79c61ba5fb2\":[90.0,-645.0],\"4230f31de995a9db92e747b14cbcc99b\":[360.0,-195.0],\"7e5789cce1074d64f7539f40f51e866e\":[90.0,-585.0],\"79a624092bc7d23e29467afeab6584e5\":[-555.0,630.0],\"eb81ee9be1ba0a7985d664f0144444fe\":[-150.0,90.0],\"84cd9fc9097eb627c55a80a92b00428d\":[-150.0,15.0]}",
+  "diagram_layout": "{\"2f7d803e2035ea4ff427500ddb874cc9\":[360.0,-345.0],\"6ef522d0f6bbd03757b4b410b6db9530\":[630.0,-525.0],\"bb9674ee59a244a2afb6d93a253fe21f\":[150.0,270.0],\"cf8efc26036f5ddc668f1e18eea96c05\":[150.0,45.0],\"c2315e0847a801e6e0cffe6bfeb710a7\":[150.0,-45.0],\"da40fea12fc261676e504aee81ccf97a\":[360.0,-105.0],\"fa641b029e65ec0c0d12397b71286ab0\":[615.0,-30.0],\"99436e98e342eed5516c4c23682c6916\":[615.0,105.0],\"60975c1bc5078e168f2e7fcd16dc4a57\":[615.0,30.0],\"15531b3a5bea235f499f945fd1649a20\":[-15.0,405.0],\"2350ff6fb515de4fc7121070ad7905dd\":[150.0,330.0],\"4d57602f0000729d6ba863f2ee679f58\":[225.0,405.0],\"8ad93b958962009897932b096d2ef0d5\":[225.0,525.0],\"7e63507c3beb205147651ccc220ec7bd\":[225.0,465.0],\"38de76ce231834712bfac2245e90798d\":[-15.0,645.0],\"731c8bc8c0f1d55dc26562b4c26dbf5a\":[150.0,120.0],\"110a57c4faf50f8411638edcf0b18454\":[-45.0,285.0],\"f7bbdc772b9a46dc4ade79791a976c80\":[150.0,210.0],\"73dba455c6878c43099ba9194b14fc24\":[-45.0,225.0],\"6bd5802e2f35e162bc9e63893c55e1c4\":[-210.0,555.0],\"480c7bab71fbf805466d4282840b513f\":[-300.0,630.0],\"520a328edfa7c2c43a1bb8c44043082c\":[-15.0,570.0],\"665f620074a2b294a9c9cc9c160141d5\":[-300.0,705.0],\"43397915fd5b8621dab819a53883fd05\":[-15.0,480.0],\"85fe06ca92d0db84fc1bc1ea49c2b433\":[90.0,-525.0],\"610b10a7b969b458e754b8c7550577eb\":[360.0,-270.0],\"517312590c5b79854df5d79c61ba5fb2\":[90.0,-645.0],\"4230f31de995a9db92e747b14cbcc99b\":[360.0,-195.0],\"7e5789cce1074d64f7539f40f51e866e\":[90.0,-585.0],\"79a624092bc7d23e29467afeab6584e5\":[-555.0,630.0],\"eb81ee9be1ba0a7985d664f0144444fe\":[-150.0,90.0],\"84cd9fc9097eb627c55a80a92b00428d\":[-150.0,15.0]}",
   "send_to_story_enabled": false,
   "entry_agent_guid": null,
   "exit_agent_guids": [],
