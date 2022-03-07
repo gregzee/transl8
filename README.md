@@ -30,7 +30,7 @@ Of course you don't have to follow 1-4, but this is how we went about it. Feel f
 
 1. [Google Translate API](translateapi/README.md)
 2. [detectlanguage.com API](detectionlanguage/README.md)
-3. [Telegram API](/translateapi/README.md)
+3. [Telegram API](/telegramapi/README.md)
 4. [Tines.io (The glue)](/tines/README.md)
 
 
