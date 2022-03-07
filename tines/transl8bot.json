@@ -3,7 +3,7 @@
   "name": "Translate Bot Ukraine",
   "description": null,
   "guid": "941b8aedf612143887c4bb7e95fb28fa",
-  "exported_at": "2022-03-06T03:06:52Z",
+  "exported_at": "2022-03-07T20:03:05Z",
   "agents": [
     {
       "type": "Agents::WebhookAgent",
@@ -11,8 +11,8 @@
       "disabled": false,
       "guid": "2f7d803e2035ea4ff427500ddb874cc9",
       "options": {
-        "path": "35c69d4a432f27d78e2ad33de52eef9",
-        "secret": "d84b8ffa7f6274452c3628e76160c5ee9",
+        "path": "35c69d4a432f27d78e2ad33de52ee12",
+        "secret": "b98e915c4315d7747b65ea2ed4e4226f",
         "verbs": "get,post"
       },
       "keep_events_for": 0
@@ -561,6 +561,22 @@
       },
       "schedule": null,
       "keep_events_for": 0
+    },
+    {
+      "type": "Agents::TriggerAgent",
+      "name": "Check text size",
+      "disabled": false,
+      "guid": "0e09e0ce351555e9b7d786da350d20f9",
+      "options": {
+        "rules": [
+          {
+            "type": "field!=value",
+            "value": "0",
+            "path": "{{.truncate_words.longtext.size}}"
+          }
+        ]
+      },
+      "keep_events_for": 0
     }
   ],
   "diagram_notes": [
@@ -623,10 +639,18 @@
     {
       "content": "Sends 1 message to users letting them know about new features.",
       "position": [
-        -225.0,
-        -60.0
+        -405.0,
+        -75.0
       ],
       "guid": "3add512118adbb07465830c5faa033cd"
+    },
+    {
+      "content": "If there is text, you may pass go!",
+      "position": [
+        -135.0,
+        60.0
+      ],
+      "guid": "8248fd655df70dcc616987d78ab3e4c9"
     }
   ],
   "links": [
@@ -640,7 +664,7 @@
     },
     {
       "source": 3,
-      "receiver": 15
+      "receiver": 32
     },
     {
       "source": 4,
@@ -749,9 +773,13 @@
     {
       "source": 31,
       "receiver": 30
+    },
+    {
+      "source": 32,
+      "receiver": 15
     }
   ],
-  "diagram_layout": "{\"2f7d803e2035ea4ff427500ddb874cc9\":[360.0,-345.0],\"6ef522d0f6bbd03757b4b410b6db9530\":[630.0,-525.0],\"bb9674ee59a244a2afb6d93a253fe21f\":[150.0,270.0],\"cf8efc26036f5ddc668f1e18eea96c05\":[150.0,45.0],\"c2315e0847a801e6e0cffe6bfeb710a7\":[150.0,-45.0],\"da40fea12fc261676e504aee81ccf97a\":[360.0,-105.0],\"fa641b029e65ec0c0d12397b71286ab0\":[615.0,-30.0],\"99436e98e342eed5516c4c23682c6916\":[615.0,105.0],\"60975c1bc5078e168f2e7fcd16dc4a57\":[615.0,30.0],\"15531b3a5bea235f499f945fd1649a20\":[-15.0,405.0],\"2350ff6fb515de4fc7121070ad7905dd\":[150.0,330.0],\"4d57602f0000729d6ba863f2ee679f58\":[225.0,405.0],\"8ad93b958962009897932b096d2ef0d5\":[225.0,525.0],\"7e63507c3beb205147651ccc220ec7bd\":[225.0,465.0],\"38de76ce231834712bfac2245e90798d\":[-15.0,645.0],\"731c8bc8c0f1d55dc26562b4c26dbf5a\":[150.0,120.0],\"110a57c4faf50f8411638edcf0b18454\":[-45.0,285.0],\"f7bbdc772b9a46dc4ade79791a976c80\":[150.0,210.0],\"73dba455c6878c43099ba9194b14fc24\":[-45.0,225.0],\"6bd5802e2f35e162bc9e63893c55e1c4\":[-210.0,555.0],\"480c7bab71fbf805466d4282840b513f\":[-300.0,630.0],\"520a328edfa7c2c43a1bb8c44043082c\":[-15.0,570.0],\"665f620074a2b294a9c9cc9c160141d5\":[-300.0,705.0],\"43397915fd5b8621dab819a53883fd05\":[-15.0,480.0],\"85fe06ca92d0db84fc1bc1ea49c2b433\":[90.0,-525.0],\"610b10a7b969b458e754b8c7550577eb\":[360.0,-270.0],\"517312590c5b79854df5d79c61ba5fb2\":[90.0,-645.0],\"4230f31de995a9db92e747b14cbcc99b\":[360.0,-195.0],\"7e5789cce1074d64f7539f40f51e866e\":[90.0,-585.0],\"79a624092bc7d23e29467afeab6584e5\":[-555.0,630.0],\"eb81ee9be1ba0a7985d664f0144444fe\":[-150.0,90.0],\"84cd9fc9097eb627c55a80a92b00428d\":[-150.0,15.0]}",
+  "diagram_layout": "{\"2f7d803e2035ea4ff427500ddb874cc9\":[360.0,-390.0],\"6ef522d0f6bbd03757b4b410b6db9530\":[630.0,-525.0],\"bb9674ee59a244a2afb6d93a253fe21f\":[150.0,270.0],\"cf8efc26036f5ddc668f1e18eea96c05\":[150.0,0.0],\"c2315e0847a801e6e0cffe6bfeb710a7\":[150.0,-90.0],\"da40fea12fc261676e504aee81ccf97a\":[360.0,-180.0],\"fa641b029e65ec0c0d12397b71286ab0\":[615.0,-105.0],\"99436e98e342eed5516c4c23682c6916\":[615.0,75.0],\"60975c1bc5078e168f2e7fcd16dc4a57\":[615.0,-15.0],\"15531b3a5bea235f499f945fd1649a20\":[-15.0,405.0],\"2350ff6fb515de4fc7121070ad7905dd\":[150.0,330.0],\"4d57602f0000729d6ba863f2ee679f58\":[225.0,405.0],\"8ad93b958962009897932b096d2ef0d5\":[225.0,525.0],\"7e63507c3beb205147651ccc220ec7bd\":[225.0,465.0],\"38de76ce231834712bfac2245e90798d\":[-15.0,645.0],\"731c8bc8c0f1d55dc26562b4c26dbf5a\":[150.0,120.0],\"110a57c4faf50f8411638edcf0b18454\":[-45.0,285.0],\"f7bbdc772b9a46dc4ade79791a976c80\":[150.0,210.0],\"73dba455c6878c43099ba9194b14fc24\":[-45.0,225.0],\"6bd5802e2f35e162bc9e63893c55e1c4\":[-210.0,555.0],\"480c7bab71fbf805466d4282840b513f\":[-300.0,630.0],\"520a328edfa7c2c43a1bb8c44043082c\":[-15.0,570.0],\"665f620074a2b294a9c9cc9c160141d5\":[-300.0,705.0],\"43397915fd5b8621dab819a53883fd05\":[-15.0,480.0],\"85fe06ca92d0db84fc1bc1ea49c2b433\":[90.0,-525.0],\"610b10a7b969b458e754b8c7550577eb\":[360.0,-330.0],\"517312590c5b79854df5d79c61ba5fb2\":[90.0,-645.0],\"4230f31de995a9db92e747b14cbcc99b\":[360.0,-255.0],\"7e5789cce1074d64f7539f40f51e866e\":[90.0,-585.0],\"79a624092bc7d23e29467afeab6584e5\":[-555.0,630.0],\"eb81ee9be1ba0a7985d664f0144444fe\":[-330.0,75.0],\"84cd9fc9097eb627c55a80a92b00428d\":[-330.0,0.0],\"0e09e0ce351555e9b7d786da350d20f9\":[150.0,60.0]}",
   "send_to_story_enabled": false,
   "entry_agent_guid": null,
   "exit_agent_guids": [],
